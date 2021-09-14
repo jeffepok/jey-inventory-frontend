@@ -7,13 +7,8 @@ class GlobalMiddleware extends GetMiddleware {
 
   @override
   RouteSettings? redirect(String? route) {
-    if(userController.authenticated && route == '/login'){
-      return RouteSettings(name: '/home');
-    }else if(!userController.authenticated && route != '/login'){
-      return RouteSettings(name: '/login');
-    }else{
-      return null;
+    if(!userController.authenticated && route != '/login'){
+        return RouteSettings(name: '/login');
     }
   }
-
 }

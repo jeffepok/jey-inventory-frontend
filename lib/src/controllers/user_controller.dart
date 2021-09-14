@@ -1,46 +1,20 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:jey_inventory_mobile/src/models/item.dart';
 import 'package:jey_inventory_mobile/src/services/auth_service.dart';
 import 'package:jey_inventory_mobile/src/services/user_service.dart';
 import 'dart:convert' as convert;
-
-class Category {
-  String name;
-  int id;
-
-  Category({required this.name, required this.id});
-}
-
-class Item {
-  String name;
-  double price;
-  String? description;
-  String? imageLink;
-  String owner;
-  Item({
-    required this.name,
-    required this.price,
-    this.description,
-    this.imageLink,
-    required this.owner
-  });
-
-  @override
-  String toString() {
-    return this.name;
-  }
-}
 
 class UserController extends GetxController {
   var _id = (-1).obs;
   var _username = "".obs;
   var _email = "".obs;
-  var _authenticated = false.obs;
-  bool get authenticated => _authenticated.value;
+  var _authenticated = false;
+  bool get authenticated => _authenticated;
 
   set authenticated(value) {
-    _authenticated.value = value;
+    _authenticated = value;
     //Get user data once authentication is set to true.
     if (value) {
       getUserData();
@@ -55,12 +29,13 @@ class UserController extends GetxController {
   set id(value) => _id.value = value;
 
   @override
-  Future<void> onInit() async {
-      var token = await AuthService.getToken();
+  onInit() async {
+    AuthService.getToken().then((token) {
       if (token.length > 0) {
         authenticated = true;
       }
-    super.onInit();
+      super.onInit();
+    });
   }
 
   Future<void> getUserData() async {
@@ -85,8 +60,7 @@ class UserController extends GetxController {
     try {
       var response = await UserService.getItems();
       //Convert response from json to native object
-      var jsonResponse =
-        convert.jsonDecode(response.body) as List<dynamic>;
+      var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
       List<Item> items = [];
 
       //To be implemented efficiently
@@ -95,11 +69,13 @@ class UserController extends GetxController {
             name: item['name'],
             price: double.parse(item['price']),
             description: item['description'],
-            owner: item['owner']
-        ));
+            owner: item['owner'],
+            category: item['category'],
+            imageLink: item['image']));
       });
+
       return items;
-    }catch(e){
+    } catch (e) {
       print(e);
       return [];
     }

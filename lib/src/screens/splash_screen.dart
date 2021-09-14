@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jey_inventory_mobile/src/controllers/login_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
+import 'package:jey_inventory_mobile/src/interceptors/interceptors.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -28,9 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/splash.jpeg"),
-              fit: BoxFit.cover),
+          color: Colors.blue
+        ),
+        child: Center(
+          child: Text(
+            'Jey Inventory',
+            style: TextStyle(color: Colors.white, fontSize: 45),
+          )
         ),
       ),
     );
