@@ -3,38 +3,20 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jey_inventory_mobile/src/services/auth_service.dart';
+import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
 import 'dart:convert' as convert;
 
 
 class LoginController extends GetxController{
-  final formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  final _authenticated = false.obs;
-  var _username = "admin".obs;
-  bool get authenticated => _authenticated.value;
-  set authenticated(value) => _authenticated.value = value;
-  get username => _username.value;
-  set username(value) => _username.value = value;
 
   @override
   void onClose() {
     usernameController.dispose();
     passwordController.dispose();
     super.onClose();
-  }
-
-  @override
-  Future<void> onInit() async {
-    // TODO: implement onInit
-    Timer(Duration(seconds: 3), () async{
-      var token = await AuthService.getToken();
-      if(token.length > 0){
-        _authenticated(true);
-      }
-    });
-
-    super.onInit();
   }
 
   String? validator(String? value) {
@@ -48,33 +30,32 @@ class LoginController extends GetxController{
   }
 
   Future<Map<String, dynamic>> login() async{
-    AuthService auth = AuthService();
     var result = new Map<String, dynamic>();
-    var response =
-      await auth.login(usernameController.text, passwordController.text);
-    var jsonResponse;
+    var userController = Get.find<UserController>();
     try{
+      var response = await AuthService.login(
+          usernameController.text,
+          passwordController.text
+      );
       //Convert response from json to native object
-      jsonResponse =
+      var jsonResponse =
         convert.jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        //Set the token to storage
+        await AuthService.setToken(jsonResponse['auth_token']);
+        result['success'] = true;
+        userController.authenticated = true;
+      } else if(response.statusCode == 400) {
+        result['success'] = false;
+        result['error'] = jsonResponse['non_field_errors'][0];
+      }
     }catch(e){
       result['success'] = false;
       result['error'] = "An error occurred";
       print(e);
     }
-    if (response.statusCode == 200) {
-      //Set the token to storage
-      await AuthService.setToken(jsonResponse['auth_token']);
-      result['success'] = true;
-    } else if(response.statusCode == 400) {
-      result['success'] = false;
-      result['error'] = jsonResponse['non_field_errors'][0];
-    }
+
     return result;
   }
 
-  Future<void> logout() async {
-    AuthService.removeToken();
-    authenticated = false;
-  }
 }

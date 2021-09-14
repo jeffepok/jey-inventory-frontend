@@ -2,9 +2,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final baseUrl = "jey-inventory.herokuapp.com";
+  static final baseUrl = "jey-inventory.herokuapp.com";
 
-  Future<http.Response> login(String username, String password) async {
+  static Future<http.Response> login(String username, String password) async {
     var url = Uri.https(baseUrl, 'api/auth/token/login/');
     var response = await http.post(url, body: {
       'username': username,

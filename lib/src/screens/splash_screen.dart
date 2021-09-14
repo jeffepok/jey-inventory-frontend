@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jey_inventory_mobile/src/controllers/login_controller.dart';
+import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final loginController = Get.find<LoginController>();
-
+  final userController = Get.find<UserController>();
   @override
   void initState() {
     // TODO: implement initState
@@ -36,13 +37,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void startTimer() {
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 3), () async{
       navigateUser(); //It will redirect  after 3 seconds
     });
   }
 
   void navigateUser() async{
-    if (loginController.authenticated) {
+    if (userController.authenticated) {
       Get.offNamed('/home');
     } else {
       Get.offNamed('/login');
