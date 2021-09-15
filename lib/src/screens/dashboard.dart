@@ -4,6 +4,8 @@ import 'package:jey_inventory_mobile/src/controllers/home_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
 import 'package:jey_inventory_mobile/src/models/item.dart';
 
+import 'itemListing.dart';
+
 
 class Dashboard extends StatelessWidget {
   final userController = Get.find<UserController>();
@@ -32,7 +34,11 @@ class Dashboard extends StatelessWidget {
                             return Text('loading...');
                           }
                         }
-                    )
+                    ),
+                  onTap: (){
+                      var homeController = Get.find<HomeController>();
+                      homeController.body = ItemListing();
+                  },
                 ),
               ],
             ),

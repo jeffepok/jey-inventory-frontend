@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jey_inventory_mobile/src/controllers/home_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
 import 'package:jey_inventory_mobile/src/models/item.dart';
 
@@ -23,7 +24,10 @@ class ItemListing extends StatelessWidget {
                       ListTile(
                         leading: Image.network(item.imageLink!),
                           title: Text(item.name),
-                          subtitle: Text(item.description!)),
+                          subtitle: Text(item.description!),
+                        onTap: (){
+                        }
+                      ),
                     ],
                   ),
                 );
