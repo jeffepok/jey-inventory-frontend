@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jey_inventory_mobile/src/controllers/home_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
 import 'package:jey_inventory_mobile/src/models/item.dart';
 
@@ -22,7 +21,17 @@ class ItemListing extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
-                        leading: Image.network(item.imageLink!),
+                        leading: Image.network(item.imageLink!,
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                               if (loadingProgress == null) {
+                                 return child;
+                               }
+                               return CircularProgressIndicator(
+                                 value: loadingProgress.expectedTotalBytes != null
+                                     ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                     : null,
+                               );
+                             }),
                           title: Text(item.name),
                           subtitle: Text(item.description!),
                         onTap: (){
@@ -33,7 +42,9 @@ class ItemListing extends StatelessWidget {
                 );
               }).toList());
             }
-            return Text('loading...');
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }),
     );
   }
