@@ -18,7 +18,7 @@ class ItemListing extends StatelessWidget {
                   children: snapshot.data!.map((item) {
                 return Card(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       ListTile(
                         leading: Image.network(item.imageLink!,
@@ -35,8 +35,10 @@ class ItemListing extends StatelessWidget {
                           title: Text(item.name),
                           subtitle: Text(item.description!),
                         onTap: (){
-                        }
+                        },
+                        trailing: Text("Price: ${item.price}"),
                       ),
+
                     ],
                   ),
                 );
