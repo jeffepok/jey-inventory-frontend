@@ -1,7 +1,9 @@
+import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http/http.dart';
 import 'package:jey_inventory_mobile/src/interceptors/interceptors.dart';
 import 'package:jey_inventory_mobile/src/config.dart';
+import 'package:jey_inventory_mobile/src/models/item.dart';
 
 class UserService{
   static final baseUrl = "jey-inventory.herokuapp.com";
@@ -24,5 +26,14 @@ class UserService{
         : Uri.http(Config.backendBaseUrl, 'api/inventory/items');
     var response = await client.get(url);
     return response;
+  }
+
+  static Future<bool> addItem(Item item) async {
+    var url = Config.production
+        ? Uri.https(Config.backendBaseUrl, 'api/inventory/items/')
+        : Uri.http(Config.backendBaseUrl, 'api/inventory/items/');
+
+    var response = await client.post(url, body: item.toMap());
+    return response.statusCode == HttpStatus.created;
   }
 }

@@ -58,4 +58,8 @@ class LoginController extends GetxController{
     return result;
   }
 
+  // Future<bool> addItem(Item item) async {
+  //
+  // }
+
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:jey_inventory_mobile/src/controllers/add_item_controller.dart';
 import 'package:jey_inventory_mobile/src/models/item.dart';
 import 'package:jey_inventory_mobile/src/services/auth_service.dart';
 import 'package:jey_inventory_mobile/src/services/user_service.dart';
@@ -69,7 +70,6 @@ class UserController extends GetxController {
             name: item['name'],
             price: double.parse(item['price']),
             description: item['description'],
-            owner: item['owner'],
             category: item['category'],
             imageLink: item['image']));
       });
@@ -79,6 +79,16 @@ class UserController extends GetxController {
       print(e);
       return [];
     }
+  }
+
+  Future<bool> addItem() async {
+    var addItemController = Get.find<AddItemController>();
+    var item = new Item(
+      name:addItemController.itemName.text,
+      price: double.parse(addItemController.price.text),
+      description: addItemController.description.text
+    );
+    return await UserService.addItem(item);
   }
 
   Future<void> logout() async {
