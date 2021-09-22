@@ -1,9 +1,10 @@
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jey_inventory_mobile/src/controllers/add_item_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'home_screen.dart';
 
 class AddItem extends StatelessWidget {
@@ -27,58 +28,76 @@ class AddItem extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    // The validator receives the text that the user has entered.
-                    controller: addItemController.itemName,
+                      // The validator receives the text that the user has entered.
+                      controller: addItemController.itemName,
                       validator: addItemController.validator,
                       decoration: InputDecoration(
-                      hintText: 'Item name',
-                      hintStyle: TextStyle(color: Colors.black26)
-                    )
-                  ),
+                          hintText: 'Item name',
+                          hintStyle: TextStyle(color: Colors.black26))),
                   TextFormField(
-                    // The validator receives the text that the user has entered.
-                    controller: addItemController.description,
-                    decoration: InputDecoration(
-                        hintText: 'Description',
-                        hintStyle: TextStyle(color: Colors.black26)
-                    )
-                  ),
+                      // The validator receives the text that the user has entered.
+                      controller: addItemController.description,
+                      decoration: InputDecoration(
+                          hintText: 'Description',
+                          hintStyle: TextStyle(color: Colors.black26))),
                   TextFormField(
                     // The validator receives the text that the user has entered.
                     controller: addItemController.price,
                     validator: addItemController.validator,
                     decoration: InputDecoration(
                         hintText: 'Price',
-                        hintStyle: TextStyle(color: Colors.black26)
-                    ),
+                        hintStyle: TextStyle(color: Colors.black26)),
                     keyboardType: TextInputType.number,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Obx((){
-                      if(addItemController.loading){
-                        return CircularProgressIndicator();
-                      }
-                      return ElevatedButton(
-                          onPressed: () async {
-                            if(addItemController.formKey.currentState!.validate()){
-                              addItemController.loading = true;
-                              var added = await userController.addItem();
-                              addItemController.loading = false;
-                              if(added) {
-                                addItemController.formKey.currentState!.reset();
-                                Get.off(() => Home());
-                              }
-                              else print('An error occurred');
-                            }
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            addItemController.pickImage();
                           },
-                          child: Text('Save')
-                      );
-                    })
-                  )
+                          child: Text('Pick an image')),
+                      ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 80),
+                          child: Obx((){
+                            if(addItemController.hasImage()){
+                              return Image.memory(addItemController.image);
+                            }
+                            return Text('Pick an image');
+                          }),
+                      )
+                    ],
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Obx(() {
+                        if (addItemController.loading) {
+                          return CircularProgressIndicator();
+                        }
+                        return ElevatedButton(
+                            onPressed: () async {
+                              if (addItemController.formKey.currentState!
+                                  .validate()) {
+                                addItemController.loading = true;
+                                var added = await userController.addItem();
+                                addItemController.loading = false;
+                                if (added) {
+                                  addItemController.formKey.currentState!
+                                      .reset();
+                                  addItemController.image = Rx([0]);
+                                  Get.off(() => Home());
+                                } else
+                                  print('An error occurred');
+                              }
+                            },
+                            child: Text('Save'));
+                      }))
                 ],
               ),
-            ) ,
+            ),
           ),
         ),
       ),

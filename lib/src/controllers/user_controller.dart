@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:jey_inventory_mobile/src/controllers/add_item_controller.dart';
@@ -71,22 +72,23 @@ class UserController extends GetxController {
             price: double.parse(item['price']),
             description: item['description'],
             category: item['category'],
-            imageLink: item['image']));
+            image: item['image']
+        ));
       });
-
       return items;
     } catch (e) {
-      print(e);
-      return [];
+        print(e);
+        return [];
     }
   }
 
   Future<bool> addItem() async {
     var addItemController = Get.find<AddItemController>();
     var item = new Item(
-      name:addItemController.itemName.text,
+      name: addItemController.itemName.text,
       price: double.parse(addItemController.price.text),
-      description: addItemController.description.text
+      description: addItemController.description.text,
+      image: convert.base64Encode(addItemController.image)
     );
     return await UserService.addItem(item);
   }

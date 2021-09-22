@@ -1,5 +1,4 @@
-class Config {
-  static final production = true;
-  static final backendBaseUrl = production
-      ? "jey-inventory.herokuapp.com": "localhost:8000";
-}
+const production = true;
+const backendBaseUrl = production
+    ? "https://jey-inventory.herokuapp.com"
+    : "http://localhost:8000";

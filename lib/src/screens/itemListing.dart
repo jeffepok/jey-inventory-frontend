@@ -18,7 +18,6 @@ class ItemListing extends StatelessWidget {
             future: userController.getItems(),
             builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
               if (snapshot.hasData) {
-
                 return ListView(
                     children: snapshot.data!.map((item) {
                   return Card(
@@ -26,8 +25,8 @@ class ItemListing extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         ListTile(
-                          leading: item.imageLink != null
-                              ? Image.network(item.imageLink!,
+                          leading: item.image != null
+                              ? Image.network(item.image,
                               loadingBuilder: (
                                   BuildContext context,
                                   Widget child,

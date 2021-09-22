@@ -5,10 +5,9 @@ import 'package:jey_inventory_mobile/src/config.dart';
 
 class AuthService {
   static Future<http.Response> login(String username, String password) async {
-    var url = Config.production
-        ? Uri.https(Config.backendBaseUrl, 'api/auth/token/login/')
-        : Uri.http(Config.backendBaseUrl, 'api/auth/token/login/');
-    var response = await http.post(url, body: {
+    var url = "$backendBaseUrl/api/auth/token/login/";
+
+    var response = await http.post(Uri.parse(url), body: {
       'username': username,
       'password': password,
     });

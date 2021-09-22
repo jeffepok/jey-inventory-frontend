@@ -1,16 +1,20 @@
 
+import 'dart:io';
+
+import 'dart:typed_data';
+
 class Item {
   String name;
   double price;
   String? description;
-  String? imageLink;
+  dynamic image;
   int? category;
 
   Item({
     required this.name,
     required this.price,
     this.description,
-    this.imageLink,
+    this.image,
     this.category
   });
 
@@ -23,7 +27,8 @@ class Item {
     return {
       'name': name,
       'price': "$price",
-      'description': description
+      'description': description,
+      'image': image
     };
   }
 }
