@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:jey_inventory_mobile/src/controllers/add_item_controller.dart';
+import 'package:jey_inventory_mobile/src/controllers/edit_add_item_controller.dart';
 import 'package:jey_inventory_mobile/src/models/item.dart';
 import 'package:jey_inventory_mobile/src/services/auth_service.dart';
 import 'package:jey_inventory_mobile/src/services/user_service.dart';
@@ -68,31 +67,42 @@ class UserController extends GetxController {
       //To be implemented efficiently
       jsonResponse.forEach((item) {
         items.add(new Item(
+            id: item['id'],
             name: item['name'],
             price: double.parse(item['price']),
             description: item['description'],
             category: item['category'],
-            image: item['image']
-        ));
+            image: item['image']));
       });
       return items;
     } catch (e) {
-        print(e);
-        return [];
+      print(e);
+      return [];
     }
   }
 
   Future<bool> addItem() async {
-    var addItemController = Get.find<AddItemController>();
+    var editAddItemController = Get.find<EditAddItemController>();
     var item = new Item(
-      name: addItemController.itemName.text,
-      price: double.parse(addItemController.price.text),
-      description: addItemController.description.text,
-      image: convert.base64Encode(addItemController.image)
-    );
+        name: editAddItemController.itemName.text,
+        price: double.parse(editAddItemController.price.text),
+        description: editAddItemController.description.text,
+        image: convert.base64Encode(editAddItemController.image));
     return await UserService.addItem(item);
   }
-
+  Future<bool> editItem(int itemId) async {
+    var editAddItemController = Get.find<EditAddItemController>();
+    var item = new Item(
+        name: editAddItemController.itemName.text,
+        price: double.parse(editAddItemController.price.text),
+        description: editAddItemController.description.text,
+        image: convert.base64Encode(editAddItemController.image));
+    return await UserService.editItem(itemId, item);
+  }
+  Future<bool> deleteItem(int? id) async {
+    if(id !=null) return await UserService.deleteItem(id);
+    return Future.value(false);
+  }
   Future<void> logout() async {
     AuthService.removeToken();
     authenticated = false;

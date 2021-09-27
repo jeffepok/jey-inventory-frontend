@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 class Item {
+  int? id;
   String name;
   double price;
   String? description;
@@ -11,6 +12,7 @@ class Item {
   int? category;
 
   Item({
+    this.id,
     required this.name,
     required this.price,
     this.description,

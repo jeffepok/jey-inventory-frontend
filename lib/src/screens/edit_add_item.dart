@@ -1,20 +1,22 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jey_inventory_mobile/src/controllers/add_item_controller.dart';
+import 'package:jey_inventory_mobile/src/controllers/edit_add_item_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
-import 'package:image_picker/image_picker.dart';
 import 'home_screen.dart';
 
-class AddItem extends StatelessWidget {
+class EditAddItem extends StatelessWidget {
   final userController = UserController();
-  final addItemController = Get.find<AddItemController>();
+  final editAddItemController = Get.find<EditAddItemController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Item'),
+        title: Text(
+          Get.arguments["change"]
+              ? 'Edit Item'
+              : 'Add Item'
+        ),
       ),
       body: Center(
         child: Container(
@@ -24,26 +26,26 @@ class AddItem extends StatelessWidget {
               maxWidth: 700,
             ),
             child: Form(
-              key: addItemController.formKey,
+              key: editAddItemController.formKey,
               child: Column(
                 children: <Widget>[
                   TextFormField(
                       // The validator receives the text that the user has entered.
-                      controller: addItemController.itemName,
-                      validator: addItemController.validator,
+                      controller: editAddItemController.itemName,
+                      validator: editAddItemController.validator,
                       decoration: InputDecoration(
                           hintText: 'Item name',
                           hintStyle: TextStyle(color: Colors.black26))),
                   TextFormField(
                       // The validator receives the text that the user has entered.
-                      controller: addItemController.description,
+                      controller: editAddItemController.description,
                       decoration: InputDecoration(
                           hintText: 'Description',
                           hintStyle: TextStyle(color: Colors.black26))),
                   TextFormField(
                     // The validator receives the text that the user has entered.
-                    controller: addItemController.price,
-                    validator: addItemController.validator,
+                    controller: editAddItemController.price,
+                    validator: editAddItemController.validator,
                     decoration: InputDecoration(
                         hintText: 'Price',
                         hintStyle: TextStyle(color: Colors.black26)),
@@ -57,14 +59,14 @@ class AddItem extends StatelessWidget {
                     children: [
                       ElevatedButton(
                           onPressed: () {
-                            addItemController.pickImage();
+                            editAddItemController.pickImage();
                           },
                           child: Text('Pick an image')),
                       ConstrainedBox(
                           constraints: BoxConstraints(maxWidth: 80),
                           child: Obx((){
-                            if(addItemController.hasImage()){
-                              return Image.memory(addItemController.image);
+                            if(editAddItemController.hasImage()){
+                              return Image.memory(editAddItemController.image);
                             }
                             return Text('Pick an image');
                           }),
@@ -74,20 +76,28 @@ class AddItem extends StatelessWidget {
                   Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Obx(() {
-                        if (addItemController.loading) {
+                        if (editAddItemController.loading) {
                           return CircularProgressIndicator();
                         }
                         return ElevatedButton(
                             onPressed: () async {
-                              if (addItemController.formKey.currentState!
+                              if (editAddItemController.formKey.currentState!
                                   .validate()) {
-                                addItemController.loading = true;
-                                var added = await userController.addItem();
-                                addItemController.loading = false;
-                                if (added) {
-                                  addItemController.formKey.currentState!
+                                editAddItemController.loading = true;
+                                var success = false;
+                                if(!Get.arguments["change"]){
+                                  success = await userController.addItem();
+                                }else{
+                                  success =
+                                  await userController.editItem(
+                                    Get.arguments["itemId"]
+                                  );
+                                }
+                                editAddItemController.loading = false;
+                                if (success) {
+                                  editAddItemController.formKey.currentState!
                                       .reset();
-                                  addItemController.image = Rx([0]);
+                                  editAddItemController.image = [0];
                                   Get.off(() => Home());
                                 } else
                                   print('An error occurred');

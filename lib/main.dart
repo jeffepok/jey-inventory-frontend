@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jey_inventory_mobile/src/controllers/add_item_controller.dart';
+import 'package:jey_inventory_mobile/src/controllers/edit_add_item_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/home_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/login_controller.dart';
 import 'package:jey_inventory_mobile/src/controllers/user_controller.dart';
@@ -18,7 +18,7 @@ main() async {
   Get.put(UserController());
   Get.put(HomeController());
   Get.put(LoginController());
-  Get.put(AddItemController());
+  Get.put(EditAddItemController());
 
 
 

@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddItemController extends GetxController{
+class EditAddItemController extends GetxController{
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final itemName = TextEditingController();
   final price = TextEditingController();
   final description = TextEditingController();
   final category = TextEditingController();
   final _loading = false.obs;
-  get loading => _loading.value;
-  set loading(value) => _loading.value = value;
-
   final Rx<List<int>> _image = Rx([0]); //Store image bytes
 
+  get loading => _loading.value;
+  set loading(value) => _loading.value = value;
   get image {
     if(this.hasImage()){
       return _image.value;
