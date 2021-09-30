@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get_connect/http/src/status/http_status.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http/http.dart';

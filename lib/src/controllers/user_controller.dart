@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:get/get_connect/http/src/status/http_status.dart';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:jey_inventory_mobile/src/controllers/edit_add_item_controller.dart';
 import 'package:jey_inventory_mobile/src/models/item.dart';
@@ -45,11 +47,11 @@ class UserController extends GetxController {
       //Convert response from json to native object
       var jsonResponse =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok) {
         username = jsonResponse["username"];
         email = jsonResponse["email"];
         id = jsonResponse["id"];
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode == HttpStatus.badRequest) {
         print(jsonResponse);
       }
     } catch (e) {
